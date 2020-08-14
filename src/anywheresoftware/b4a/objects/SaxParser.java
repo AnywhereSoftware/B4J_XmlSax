@@ -37,7 +37,7 @@ import anywheresoftware.b4a.objects.collections.List;
  *Text - The element text (if such exists).
  */
 @ShortName("SaxParser")
-@Events(values={"StartElement (Uri As String, Name As String, Attributes As Attributes)",
+@Events(values={"Characters (Text as String)","StartElement (Uri As String, Name As String, Attributes As Attributes)",
 		"EndElement (Uri As String, Name As String, Text As StringBuilder)"})
 @Version(1.00f)
 public class SaxParser {
@@ -49,7 +49,7 @@ public class SaxParser {
 	 *See this <link>tutorial|http://www.basic4ppc.com/forum/basic4android-getting-started-tutorials/6866-xml-parsing-xmlsax-library.html</link> for a working example.
 	 */
 	public static void LIBRARY_DOC() {
-		
+
 	}
 	/**
 	 * A list that holds the names of the parents elements.
@@ -91,6 +91,7 @@ public class SaxParser {
 		private StringBuilder sb = new StringBuilder();
 		private final String startEvent = eventName + "_" + "startelement";
 		private final String endEvent = eventName + "_" + "endelement";
+		private final String charactersEvent = eventName + "_" + "characters";
 		private StringBuilderWrapper sbw = new StringBuilderWrapper();
 		private AttributesWrapper aw = new AttributesWrapper();
 		public MyHandler() {
@@ -110,7 +111,9 @@ public class SaxParser {
 		public void characters (char ch[], int start, int length)
 		throws SAXException
 	    {
-			sb.append(ch, start, length);
+			String str = new String(ch, start, length);
+			sb.append(str);
+			ba.raiseEvent2(null, true,charactersEvent ,false, str);
 	    }
 		@Override
 		public void endElement (String uri, String localName, String qName)
